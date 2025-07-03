@@ -64,8 +64,9 @@ select = [
 ]
 # Adicione os códigos dos erros que você quer ignorar
 ignore = [
-    "T201",    # print statements
-    "COM812",  # trailing comma missing
+    "T201",
+    "T203",
+    "COM812",
     "E501",
     "FBT003",
     "C901",
@@ -83,7 +84,7 @@ ignore = [
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
-line-ending = "lf"
+line-ending = "native"
 
 [tool.ruff.lint.isort]
 # Ensina ao Ruff qual é o pacote principal do seu projeto.

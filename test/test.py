@@ -1,7 +1,8 @@
 import beta as jg
 
 
-def main(): ...
+def main() -> None:
+    print("Iniciando o jogo UNO...")
 
 
 if __name__ == "__main__":
