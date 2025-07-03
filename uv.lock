@@ -151,7 +151,7 @@ wheels = [
 ]
 
 [[package]]
-name = "visual"
+name = "uno-bot"
 version = "0.0.1"
 source = { editable = "." }
 dependencies = [
