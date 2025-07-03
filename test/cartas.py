@@ -35,20 +35,19 @@ class Baralho:
         self.baralho.extend(self.descarte[:-1])
         shuffle(self.baralho)
 
-    def comprar(self, quantidade: int = 1) -> list[object]:
+    def comprar(self, quantidade: int = 1) -> list[Carta]:
         """Compra cartas do topo do baralho"""
         if quantidade <= 0:
-            raise ValueError("Quantidade deve ser maior que zero")
+            error_msg = "Quantidade deve ser maior que zero"
+            raise ValueError(error_msg)
         if quantidade > len(self.baralho):
             self.embaralhar()
             if quantidade > len(self.baralho):
-                raise ValueError(
-                    "Você tentou comprar mais cartas do que o baralho contém"
-                )
+                error_msg = "Você tentou comprar mais cartas do que o baralho contém"
+                raise ValueError(error_msg)
 
-        cartas_compradas = self.baralho[:quantidade]
         self.baralho = self.baralho[quantidade:]
-        return cartas_compradas
+        return self.baralho[:quantidade]
 
     def resetar(self) -> None:
         """Reinicia o baralho para seu estado original"""

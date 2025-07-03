@@ -32,7 +32,7 @@ async def load_cogs(bot: commands.Bot) -> str:
     arquivos_comandos = list(filer_comandos.glob("*.py"))
 
     if not arquivos_comandos:
-        print("⚠️  Nenhum arquivo .py encontrado")
+        print("🔴  Nenhum arquivo .py encontrado")
         return "🟡"
 
     for file in arquivos_comandos:
