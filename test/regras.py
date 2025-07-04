@@ -1,7 +1,15 @@
 from beta import Carta
 
 
-class UnoRegras:
+class Regras:
+    pass
+
+
+class Efeitos:
+    pass
+
+
+class UnoRegras(Regras):
     def mesma_cor(self, carta1: Carta, carta2: Carta) -> bool:
         return carta1.estilo == carta2.estilo
 
@@ -9,7 +17,7 @@ class UnoRegras:
         return carta1.valor == carta2.valor
 
 
-class UnoEfeitos:
+class UnoEfeitos(Efeitos):
     def pular(self) -> bool:
         pass
 

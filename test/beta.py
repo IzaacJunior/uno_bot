@@ -2,15 +2,15 @@ from random import shuffle
 
 
 class Carta:
-    """ "
+    """
     - Valor
     - estilo
     """
 
-    def __init__(self, valor: int, estilo: int, efeitos: None | ... = None) -> None:
+    def __init__(self, valor: int, estilo: int, efeitos: object | None = None) -> None:
         self.valor: int = valor
         self.estilo: int = estilo
-        self.efeitos: None | ... = efeitos
+        self.efeitos: object | None = efeitos
 
     # Comparação de igualdade
     def __eq__(self, other: object) -> bool:
@@ -82,19 +82,16 @@ class Baralho:
                 raise ValueError(
                     "Você tentou comprar mais cartas do que o cartas contém"
                 )
-
+        cartas_compradas = self.cartas[:quantidade]
         self.cartas = self.cartas[quantidade:]
-        return self.cartas[:quantidade]
+        return cartas_compradas
 
     def descartar(self, cartas: list[Carta]) -> None:
         """Descarta uma carta para a pilha"""
         for carta in cartas:
             if not isinstance(carta, Carta):
                 raise TypeError("O objeto deve ser uma instância de Carta")
-        self.pila.extend(carta)
-
-    def __repr__(self) -> list:
-        return self.cartas
+        self.pila.extend(cartas)
 
 
 class Jogador:
@@ -107,24 +104,21 @@ class Jogador:
     -- Calcular pontos
     """
 
-    def __init__(self, nome: str, baralho: Baralho) -> None:
+    def __init__(self, nome: str) -> None:
         self.nome: str = nome
         self.cartas: list[Carta] = []
-        self.baralho: Baralho = baralho
         self.pontos: int = 0
 
     def comprar(self, carta: Carta) -> None:
         """Adiciona uma carta à mão do jogador"""
-        if carta not in self.cartas:
-            return
         self.cartas.append(carta)
 
-    def descartar(self, carta: Carta) -> Carta | None:
+    def descartar(self, carta: Carta) -> Carta:
         """Remove uma carta da mão do jogador"""
         if carta not in self.cartas:
             error_msg = f"Carta {carta} não encontrada na mão"
             raise ValueError(error_msg)
-        self.cartas.remuve(carta)
+        self.cartas.remove(carta)
         return carta
 
     def calcular_pontos(self) -> int:

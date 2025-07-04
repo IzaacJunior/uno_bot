@@ -12,8 +12,34 @@ class Base(ABC):
         self.sentido: int = 1
 
     def add_jogador(self, nome: str) -> None:
-        self.jogadores.append(Jogador(nome, self.baralho))
-        return
+        self.jogadores.append(Jogador(nome))
+
+    def proximo_jogador(self) -> None:
+        """Avança para o próximo jogador"""
+        self.atual = (self.atual + self.sentido) % len(self.jogadores)
+
+    def comprar(self, quantidade: int = 1) -> None:
+        """
+        Compra cartas do baralho para o jogador atual.
+        """
+        cartas_compradas = self.baralho.comprar(quantidade)
+        self.jogadores[self.atual].cartas.extend(cartas_compradas)
+        self.proximo_jogador()
+
+    def descartar(self, cartas: list[Carta]) -> None:
+        """
+        Descarta cartas do jogador atual para a pilha.
+        """
+        jogador = self.jogadores[self.atual]
+        for carta in cartas:
+            if carta not in jogador.cartas:
+                msg = f"A carta {carta} não está na mão do jogador {jogador.nome}"
+                raise ValueError(msg)
+
+        for carta in cartas:
+            jogador.cartas.remove(carta)
+        self.baralho.pila.extend(cartas)
+        self.proximo_jogador()
 
     @abstractmethod
     def _baralho(self) -> Baralho:
@@ -55,39 +81,15 @@ class Uno(Base):
 
         return baralho
 
-    def comprar(self, quantidade: int = 1) -> None:
-        """
-        Compra cartas do baralho para o jogador atual.
-        """
-        if not self.jogadores:
-            raise ValueError("Nenhum jogador foi adicionado ao jogo")
-
-        cartas_compradas = self.baralho.comprar(quantidade)
-        self.jogadores[self.atual].cartas.extend(cartas_compradas)
-        self.atual += 1
-
-    def descartar(self, cartas: list[Carta]) -> None:
-        """
-        Descarta cartas do jogador atual para a pilha.
-        """
-        if not self.jogadores:
-            raise ValueError("Nenhum jogador foi adicionado ao jogo")
-
-        if not cartas:
-            raise ValueError("Nenhuma carta foi fornecida para descartar")
-        jogador = self.jogadores[self.atual]
-        for carta in cartas:
-            if carta not in jogador.cartas:
-                msg = f"A carta {carta} não está na mão do jogador {jogador.nome}"
-                raise ValueError(msg)
-
-        for carta in cartas:
-            jogador.cartas.remove(carta)
-        self.baralho.pila.extend(cartas)
-
     def validar(self, carta: Carta) -> bool:
         ultima_carta = self.__repr__()
         if not any(regra(carta, ultima_carta) for regra in self.regras):
             return False
         ...
         return True
+
+    def add_regra(self, regra: any) -> None:
+        pass
+
+    def add_efeito(self, efeito: any) -> None:
+        pass

@@ -32,7 +32,3 @@ if __name__ == "__main__":
     pprint(*uno.baralho.cartas)
     azul("Pila")
     pprint(*uno.baralho.pila)
-    azul("Jogadores")
-    for jogador in uno.jogadores:
-        red(jogador.nome)
-        pprint(*jogador.cartas)
