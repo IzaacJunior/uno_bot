@@ -1,38 +1,22 @@
 from random import shuffle
 
 
-class Estilos:
-    def __init__(self, x: int, y: int) -> None:
-        self.x: int = x
-        self.y: int = y
-
-    def uno(self) -> ...:
-        return (self.x, self.y)
-
-
-class Efeito: ...
-
-
 class Carta:
     """ "
     - Valor
     - estilo
-    - Primeira mão
-    -- Efeito (Baralho)
     """
 
-    def __init__(
-        self, valor: int, estilo: tuple[int, int], efeito: Efeito | None = None
-    ) -> None:
+    def __init__(self, valor: int, estilo: int, efeitos: None | ... = None) -> None:
         self.valor: int = valor
-        self.estilo: tuple[int, int] = estilo
-        self.efeito: Efeito = efeito
+        self.estilo: int = estilo
+        self.efeitos: None | ... = efeitos
 
     # Comparação de igualdade
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
             return False
-        return self.valor == other.valor
+        return self.valor == other.valor and self.estilo == other.estilo
 
     # Menor que
     def __lt__(self, other: "Carta") -> bool:
@@ -63,7 +47,7 @@ class Carta:
         return not self.__eq__(other)
 
     def __str__(self) -> str:
-        return f"Carta(valor={self.valor}, estilo={self.estilo}, efeito={self.efeito})"
+        return f"Carta(valor={self.valor}, estilo={self.estilo})"
 
     def __repr__(self) -> str:
         return self.__str__()
@@ -72,7 +56,7 @@ class Carta:
 class Baralho:
     """
     - Pila
-    - Baralho
+    - cartas
     -- Regras
          -- (Cartas): Validar jogada
          -- (Cartas): Alterar regras
@@ -80,27 +64,37 @@ class Baralho:
     -- Comprar
     """
 
-    def __init__(self, baralho: list[Carta]) -> None:
-        self.baralho: list[Carta] = baralho
+    def __init__(self, cartas: list[Carta]) -> None:
+        self.cartas: list[Carta] = cartas
         self.pila: list[Carta] = []
 
     def embaralhar(self) -> None:
-        """Embaralha o baralho"""
-        shuffle(self.baralho)
+        """Embaralha o cartas"""
+        shuffle(self.cartas)
 
     def comprar(self, quantidade: int = 1) -> list[Carta]:
-        """Compra cartas do topo do baralho"""
+        """Compra cartas do topo do cartas"""
         if quantidade <= 0:
             raise ValueError("Quantidade deve ser maior que zero")
-        if quantidade > len(self.baralho):
+        if quantidade > len(self.cartas):
             self.embaralhar()
-            if quantidade > len(self.baralho):
+            if quantidade > len(self.cartas):
                 raise ValueError(
-                    "Você tentou comprar mais cartas do que o baralho contém"
+                    "Você tentou comprar mais cartas do que o cartas contém"
                 )
 
-        self.baralho = self.baralho[quantidade:]
-        return self.baralho[:quantidade]
+        self.cartas = self.cartas[quantidade:]
+        return self.cartas[:quantidade]
+
+    def descartar(self, cartas: list[Carta]) -> None:
+        """Descarta uma carta para a pilha"""
+        for carta in cartas:
+            if not isinstance(carta, Carta):
+                raise TypeError("O objeto deve ser uma instância de Carta")
+        self.pila.extend(carta)
+
+    def __repr__(self) -> list:
+        return self.cartas
 
 
 class Jogador:
@@ -113,21 +107,25 @@ class Jogador:
     -- Calcular pontos
     """
 
-    def __init__(self, nome: str) -> None:
+    def __init__(self, nome: str, baralho: Baralho) -> None:
         self.nome: str = nome
         self.cartas: list[Carta] = []
+        self.baralho: Baralho = baralho
         self.pontos: int = 0
 
-    def pegar_carta(self, carta: Carta) -> None:
+    def comprar(self, carta: Carta) -> None:
         """Adiciona uma carta à mão do jogador"""
-        if carta in self.cartas:
-            ...
-            self.cartas.append(carta)
+        if carta not in self.cartas:
+            return
+        self.cartas.append(carta)
 
-    def jogar_carta(self, carta: Carta) -> None:
+    def descartar(self, carta: Carta) -> Carta | None:
         """Remove uma carta da mão do jogador"""
-        if carta in self.cartas:
-            self.cartas.remove(carta)
+        if carta not in self.cartas:
+            error_msg = f"Carta {carta} não encontrada na mão"
+            raise ValueError(error_msg)
+        self.cartas.remuve(carta)
+        return carta
 
     def calcular_pontos(self) -> int:
         """Calcula os pontos do jogador com base nas cartas na mão"""

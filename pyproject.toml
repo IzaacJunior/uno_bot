@@ -74,7 +74,8 @@ ignore = [
     "N806",
     "ERA001",
     "TRY003",
-    "EM101"
+    "EM101",
+    "RET502"
     
 ]
 
@@ -87,8 +88,6 @@ indent-style = "space"
 line-ending = "native"
 
 [tool.ruff.lint.isort]
-# Ensina ao Ruff qual é o pacote principal do seu projeto.
-# Deve ser o mesmo nome da pasta dentro de 'src/'.
 known-first-party = ["my_package"]
 
 

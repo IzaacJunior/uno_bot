@@ -1,4 +1,17 @@
-import beta as jg
+import jogos as jg
+from colored import fore, style
+
+
+def azul(text: str) -> str:
+    print(f"{fore('blue')}{text.center(30, '-')}{style('reset')}")
+
+
+def red(text: str) -> str:
+    print(f"{fore('red')}{text.center(30, '-')}{style('reset')}")
+
+
+def pprint(*args: object) -> None:
+    print(*args, sep="\n", end="\n\n")
 
 
 def main() -> None:
@@ -6,18 +19,20 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
-    # Testando a classe Jogador
-    jogador = jg.Jogador("Jogador 1")
-    print(f"Nome do Jogador: {jogador.nome}")
+    uno = jg.Uno()
 
-    # Testando a classe Carta
-    carta = jg.Carta(5, (1, 2), "Efeito de exemplo")
-    print(
-        f"Valor da Carta: {carta.valor}, Estilo: {carta.estilo}, Efeito: {carta.efeito}"
-    )
+    uno.add_jogador("Jogador 1")
+    uno.add_jogador("Jogador 2")
+    uno.add_jogador("Jogador 3")
 
-    # Testando a classe Baralho
-    baralho = jg.Baralho()
-    baralho.embaralhar()
-    print(f"Baralho embaralhado: {[carta.valor for carta in baralho.baralho]}")
+    uno.start()
+
+    azul("Caratas")
+    uno.baralho.cartas.sort()
+    pprint(*uno.baralho.cartas)
+    azul("Pila")
+    pprint(*uno.baralho.pila)
+    azul("Jogadores")
+    for jogador in uno.jogadores:
+        red(jogador.nome)
+        pprint(*jogador.cartas)
