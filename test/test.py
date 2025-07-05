@@ -30,6 +30,8 @@ if __name__ == "__main__":
     uno.add_jogador("Jogador 2")
     uno.add_jogador("Jogador 3")
 
+    # Melhorar usando o padrão de projeto para gerar uma instância de regras
+    # Mover para um lugar mais apropriado
     regras = UnoRegras()
     lista_de_regras = [
         regras.mesma_cor,

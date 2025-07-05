@@ -12,10 +12,15 @@ class Base(ABC):
         self.sentido: int = 1
 
     def add_jogador(self, nome: str) -> None:
+        """
+        Adiciona um jogador ao jogo.
+        """
         self.jogadores.append(Jogador(nome))
 
     def proximo_jogador(self) -> None:
-        """Avança para o próximo jogador"""
+        """
+        Avança para o próximo jogador
+        """
         self.atual = (self.atual + self.sentido) % len(self.jogadores)
 
     def comprar(self, quantidade: int = 1) -> None:
@@ -32,12 +37,8 @@ class Base(ABC):
         """
         jogador = self.jogadores[self.atual]
         ultima_carta = self.baralho.pilha[-1]
-        for carta in cartas:
-            print("-----")
-            print(self.regras)
-            print("-----")
-            if any(regra(carta, ultima_carta) for regra in self.regras):
-                continue
+
+        if not self.validar(cartas):
             return False
 
         for carta in cartas:
@@ -47,17 +48,31 @@ class Base(ABC):
         return True
 
     @abstractmethod
+    def start(self, hand: int = 7) -> None:
+        """
+        Inicia o jogo, distribuindo cartas para os jogadores e colocando a primeira carta na pilha.
+        """
+        pass
+
+    @abstractmethod
     def _baralho(self) -> Baralho:
+        """
+        Cria e embaralha o baralho de cartas.
+        """
         pass
 
     @abstractmethod
     def validar(self, carta: Carta) -> None:
+        """
+        Valida se as cartas descartadas são válidas de acordo com as regras do jogo.
+        """
         pass
 
 
 class Uno(Base):
     def __init__(self) -> None:
         super().__init__()
+        self.efeitos: list[object] = []
 
     def start(self, hand: int = 7) -> None:
         """
@@ -75,20 +90,19 @@ class Uno(Base):
     def _baralho(self) -> Baralho:
         lista = []
         for j in range(1, 5):
-            for i in range(1, 12):
+            for i in range(1, 9):
                 lista.append(Carta(valor=i, estilo=j))
+            for i in range(10, 13):
+                lista.append(Carta(valor=i, estilo=j, efeito=True))
 
         baralho = Baralho(lista)
         baralho.embaralhar()
 
         return baralho
 
-    def validar(self, carta: Carta) -> bool:
-        ultima_carta = self.pilha[-1]
-        if not any(regra(carta, ultima_carta) for regra in self.regras):
-            return False
-        ...
-        return True
-
-    def add_efeito(self, efeito: any) -> None:
-        pass
+    def validar(self, cartas: list[Carta]) -> bool:
+        ultima_carta = self.baralho.pilha[-1]
+        info = []
+        for carta in cartas:
+            info.append(any(regra(carta, ultima_carta) for regra in self.regras))
+        return all(info)
