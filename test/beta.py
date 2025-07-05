@@ -55,7 +55,7 @@ class Carta:
 
 class Baralho:
     """
-    - Pila
+    - Pilha
     - cartas
     -- Regras
          -- (Cartas): Validar jogada
@@ -66,7 +66,7 @@ class Baralho:
 
     def __init__(self, cartas: list[Carta]) -> None:
         self.cartas: list[Carta] = cartas
-        self.pila: list[Carta] = []
+        self.pilha: list[Carta] = []
 
     def embaralhar(self) -> None:
         """Embaralha o cartas"""
@@ -91,7 +91,7 @@ class Baralho:
         for carta in cartas:
             if not isinstance(carta, Carta):
                 raise TypeError("O objeto deve ser uma instância de Carta")
-        self.pila.extend(cartas)
+        self.pilha.extend(cartas)
 
 
 class Jogador:
